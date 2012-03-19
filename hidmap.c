@@ -37,15 +37,23 @@ struct _hidmap_device *devices = 0;
 void cleanup_device(hidmap_device dev);
 
 // Declare output signals
-void add_mapper_signals(hidmap_device dev)
+void add_mapper_signals(hidmap_device dev,
+                        unsigned short usage_page,
+                        unsigned short usage)
 {
     printf("***************REPORT****************\n");
-    data[0] = 0x2;
+    printf("usage_page: %i, usage: %i, ", usage_page, usage);
+    data[0] = 0;
     int len = hid_get_feature_report(dev->handle, data, MAXLIST);
+    printf("len: %i\n", len );
     for (int i = 0; i < len; i++) {
         printf("%c", data[i]);
     }
     printf("\n");
+    
+    // try to get report descriptor
+    printf("device has %i elements\n", hid_get_num_elements(dev->handle));
+
 }
 
 // Check if any HID devices are available on the system
@@ -89,8 +97,8 @@ void scan_hid_devices()
         hid_set_nonblocking(dev->handle, 1);
         dev->next = devices;
         devices = dev;
-        add_mapper_signals(dev);
         printf("    Added %ls\n", cur_dev->product_string);
+        add_mapper_signals(dev, cur_dev->usage_page, cur_dev->usage);
         cur_dev = cur_dev->next;
     }
     hid_free_enumeration(devs);

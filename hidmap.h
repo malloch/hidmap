@@ -8,7 +8,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#include "./hidapi/hidapi.h"
+#include "hidapi.h"
 #include "mapper/mapper.h"
 
 void declare_mapper_device();

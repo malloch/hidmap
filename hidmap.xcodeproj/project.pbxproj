@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70A74EF51517D10900B08F0B /* hid.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A74EF41517D10900B08F0B /* hid.c */; };
 		70EC644A1513962D0037C5FC /* hidmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 70EC64481513962D0037C5FC /* hidmap.c */; };
-		70EC64B71513A7170037C5FC /* hid.c in Sources */ = {isa = PBXBuildFile; fileRef = 70EC64B51513A7170037C5FC /* hid.c */; };
 		70EC64FD1513A9780037C5FC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70EC64FC1513A9780037C5FC /* IOKit.framework */; };
 		70EC65011513A9900037C5FC /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70EC65001513A9900037C5FC /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
@@ -26,10 +26,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		70A74EF41517D10900B08F0B /* hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hid.c; path = ../hidapi/mac/hid.c; sourceTree = SOURCE_ROOT; };
+		70A74EF61517D10F00B08F0B /* hidapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hidapi.h; path = ../hidapi/hidapi/hidapi.h; sourceTree = SOURCE_ROOT; };
 		70EC64481513962D0037C5FC /* hidmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hidmap.c; sourceTree = "<group>"; };
 		70EC64491513962D0037C5FC /* hidmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hidmap.h; sourceTree = "<group>"; };
-		70EC64B51513A7170037C5FC /* hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hid.c; path = hidapi/hid.c; sourceTree = "<group>"; };
-		70EC64B61513A7170037C5FC /* hidapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hidapi.h; path = hidapi/hidapi.h; sourceTree = "<group>"; };
 		70EC64B81513A7170037C5FC /* hidmap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hidmap; sourceTree = BUILT_PRODUCTS_DIR; };
 		70EC64FC1513A9780037C5FC /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		70EC65001513A9900037C5FC /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
@@ -53,8 +53,8 @@
 			children = (
 				70EC64481513962D0037C5FC /* hidmap.c */,
 				70EC64491513962D0037C5FC /* hidmap.h */,
-				70EC64B51513A7170037C5FC /* hid.c */,
-				70EC64B61513A7170037C5FC /* hidapi.h */,
+				70A74EF61517D10F00B08F0B /* hidapi.h */,
+				70A74EF41517D10900B08F0B /* hid.c */,
 				70A19DC8142A4EC3008D876C /* Headers */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6859E8C029090F304C91782 /* Documentation */,
@@ -145,7 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				70EC644A1513962D0037C5FC /* hidmap.c in Sources */,
-				70EC64B71513A7170037C5FC /* hid.c in Sources */,
+				70A74EF51517D10900B08F0B /* hid.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
