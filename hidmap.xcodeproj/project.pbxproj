@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		70A74EF51517D10900B08F0B /* hid.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A74EF41517D10900B08F0B /* hid.c */; };
+		70A7502B151A370C00B08F0B /* HID_Utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A75022151A370C00B08F0B /* HID_Utilities.c */; };
+		70A7502C151A370C00B08F0B /* ImmrHIDUtilAddOn.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A75024151A370C00B08F0B /* ImmrHIDUtilAddOn.c */; };
+		70A7502D151A370C00B08F0B /* IOHIDDevice_.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A75026151A370C00B08F0B /* IOHIDDevice_.c */; };
+		70A7502E151A370C00B08F0B /* IOHIDElement_.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A75028151A370C00B08F0B /* IOHIDElement_.c */; };
 		70EC644A1513962D0037C5FC /* hidmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 70EC64481513962D0037C5FC /* hidmap.c */; };
 		70EC64FD1513A9780037C5FC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70EC64FC1513A9780037C5FC /* IOKit.framework */; };
 		70EC65011513A9900037C5FC /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70EC65001513A9900037C5FC /* CoreFoundation.framework */; };
@@ -28,6 +32,15 @@
 /* Begin PBXFileReference section */
 		70A74EF41517D10900B08F0B /* hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hid.c; path = ../hidapi/mac/hid.c; sourceTree = SOURCE_ROOT; };
 		70A74EF61517D10F00B08F0B /* hidapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hidapi.h; path = ../hidapi/hidapi/hidapi.h; sourceTree = SOURCE_ROOT; };
+		70A75022151A370C00B08F0B /* HID_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Utilities.c; sourceTree = "<group>"; };
+		70A75023151A370C00B08F0B /* HID_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Utilities.h; sourceTree = "<group>"; };
+		70A75024151A370C00B08F0B /* ImmrHIDUtilAddOn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImmrHIDUtilAddOn.c; sourceTree = "<group>"; };
+		70A75025151A370C00B08F0B /* ImmrHIDUtilAddOn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImmrHIDUtilAddOn.h; sourceTree = "<group>"; };
+		70A75026151A370C00B08F0B /* IOHIDDevice_.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IOHIDDevice_.c; sourceTree = "<group>"; };
+		70A75027151A370C00B08F0B /* IOHIDDevice_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDDevice_.h; sourceTree = "<group>"; };
+		70A75028151A370C00B08F0B /* IOHIDElement_.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IOHIDElement_.c; sourceTree = "<group>"; };
+		70A75029151A370C00B08F0B /* IOHIDElement_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDElement_.h; sourceTree = "<group>"; };
+		70A7502A151A370C00B08F0B /* IOHIDLib_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDLib_.h; sourceTree = "<group>"; };
 		70EC64481513962D0037C5FC /* hidmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hidmap.c; sourceTree = "<group>"; };
 		70EC64491513962D0037C5FC /* hidmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hidmap.h; sourceTree = "<group>"; };
 		70EC64B81513A7170037C5FC /* hidmap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hidmap; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,6 +68,15 @@
 				70EC64491513962D0037C5FC /* hidmap.h */,
 				70A74EF61517D10F00B08F0B /* hidapi.h */,
 				70A74EF41517D10900B08F0B /* hid.c */,
+				70A75022151A370C00B08F0B /* HID_Utilities.c */,
+				70A75023151A370C00B08F0B /* HID_Utilities.h */,
+				70A75024151A370C00B08F0B /* ImmrHIDUtilAddOn.c */,
+				70A75025151A370C00B08F0B /* ImmrHIDUtilAddOn.h */,
+				70A75026151A370C00B08F0B /* IOHIDDevice_.c */,
+				70A75027151A370C00B08F0B /* IOHIDDevice_.h */,
+				70A75028151A370C00B08F0B /* IOHIDElement_.c */,
+				70A75029151A370C00B08F0B /* IOHIDElement_.h */,
+				70A7502A151A370C00B08F0B /* IOHIDLib_.h */,
 				70A19DC8142A4EC3008D876C /* Headers */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6859E8C029090F304C91782 /* Documentation */,
@@ -146,6 +168,10 @@
 			files = (
 				70EC644A1513962D0037C5FC /* hidmap.c in Sources */,
 				70A74EF51517D10900B08F0B /* hid.c in Sources */,
+				70A7502B151A370C00B08F0B /* HID_Utilities.c in Sources */,
+				70A7502C151A370C00B08F0B /* ImmrHIDUtilAddOn.c in Sources */,
+				70A7502D151A370C00B08F0B /* IOHIDDevice_.c in Sources */,
+				70A7502E151A370C00B08F0B /* IOHIDElement_.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

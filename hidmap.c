@@ -37,30 +37,47 @@ struct _hidmap_device *devices = 0;
 void cleanup_device(hidmap_device dev);
 
 // Declare output signals
-void add_mapper_signals(hidmap_device dev,
-                        unsigned short usage_page,
-                        unsigned short usage)
+int add_mapper_signals(hidmap_device dev)
 {
     printf("***************REPORT****************\n");
-    printf("usage_page: %i, usage: %i, ", usage_page, usage);
-    data[0] = 0;
-    int len = hid_get_feature_report(dev->handle, data, MAXLIST);
-    printf("len: %i\n", len );
-    for (int i = 0; i < len; i++) {
-        printf("%c", data[i]);
-    }
-    printf("\n");
-    
-    // try to get report descriptor
-    printf("device has %i elements\n", hid_get_num_elements(dev->handle));
+    char sig_name[256];
+    int num_signals = 0;
+    struct hid_element_info *elements, *cur_element;
+    elements = hid_enumerate_elements(dev->handle);
+    cur_element = elements;
+    while (cur_element) {
+        if (cur_element->type == 513) {
+            cur_element = cur_element->next;
+            continue;   // skip collections
+        }
 
+        sig_name[0] = 0;
+        // Remove string "Generic Desktop" from path
+        int len = strlen(cur_element->path), i, j = 0;
+        for (i=0; i<len;) {
+            if (strncmp(&cur_element->path[i], "Generic Desktop ", 16) == 0)
+                i += 16;
+            else if (isalnum(cur_element->path[i]) || cur_element->path[i] == '/') {
+                sig_name[j++] = cur_element->path[i++];
+                sig_name[j] = 0;
+            }
+            else
+                i++;
+        }
+        mdev_add_output(dev->dev, sig_name, 1, 'i', 0, &cur_element->logical_range[0], &cur_element->logical_range[1]);
+        num_signals++;
+
+        printf("%s -> size: %i, bitoffset: %i\n", sig_name, cur_element->size, cur_element->bit_offset);
+        cur_element = cur_element->next;
+    }
+    return num_signals;
 }
 
 // Check if any HID devices are available on the system
 void scan_hid_devices()
 {
     printf("Searching for HID devices...\n");
-    char buffer[256], serial_string[256], *position;
+    char buffer[256], sig_name[256], serial_string[256];
 
     struct hid_device_info *devs, *cur_dev;
     devs = hid_enumerate(0x0, 0x0);
@@ -86,19 +103,35 @@ void scan_hid_devices()
         // new device discovered
         hidmap_device dev = (hidmap_device) calloc(1, sizeof(struct _hidmap_device));
         snprintf(buffer, 256, "%ls", cur_dev->product_string);
-        while (position = strchr(buffer, ' ')) {
-            *position = '_';
+        int len = strlen(buffer), i, j = 0;
+        for (i=0; i<len;) {
+            if (isalnum(buffer[i])) {
+                sig_name[j++] = buffer[i++];
+                sig_name[j] = 0;
+            }
+            else
+                i++;
         }
-        dev->dev = mdev_new(buffer, port, 0);
+        dev->dev = mdev_new(sig_name, port, 0);
         dev->vendor_id = cur_dev->vendor_id;
         dev->product_id = cur_dev->product_id;
         dev->serial_number = strdup(serial_string);
         dev->handle = hid_open(cur_dev->vendor_id, cur_dev->product_id, cur_dev->serial_number);
-        hid_set_nonblocking(dev->handle, 1);
+        if (add_mapper_signals(dev)) {
+            hid_set_nonblocking(dev->handle, 1);
+            printf("    Added %ls\n", cur_dev->product_string);
+        }
+        else {
+            // device has no signals, free it but keep metadata for future scans
+            mdev_free(dev->dev);
+            dev->dev = 0;
+            hid_close(dev->handle);
+            dev->handle = 0;
+        }
+
         dev->next = devices;
         devices = dev;
-        printf("    Added %ls\n", cur_dev->product_string);
-        add_mapper_signals(dev, cur_dev->usage_page, cur_dev->usage);
+        
         cur_dev = cur_dev->next;
     }
     hid_free_enumeration(devs);
@@ -139,10 +172,13 @@ void loop()
         // poll libmapper outputs
         temp = devices;
         while (temp) {
-            mdev_poll(temp->dev, 0);
-            i = hid_read(temp->handle, data, 256);
-            if (i) {
-                printf("read %i bytes from %s\n", i, mdev_name(temp->dev));
+            if (temp->dev)
+                mdev_poll(temp->dev, 0);
+            if (temp->handle) {
+                i = hid_read(temp->handle, data, 256);
+                if (i) {
+                    printf("read %i bytes from %s\n", i, mdev_name(temp->dev));
+                }
             }
             temp = temp->next;
         }
