@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7013F75A1523A96A0082C1C5 /* hidmap_osx.c in Sources */ = {isa = PBXBuildFile; fileRef = 7013F7591523A96A0082C1C5 /* hidmap_osx.c */; };
 		70A74EF51517D10900B08F0B /* hid.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A74EF41517D10900B08F0B /* hid.c */; };
 		70A7502B151A370C00B08F0B /* HID_Utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A75022151A370C00B08F0B /* HID_Utilities.c */; };
 		70A7502C151A370C00B08F0B /* ImmrHIDUtilAddOn.c in Sources */ = {isa = PBXBuildFile; fileRef = 70A75024151A370C00B08F0B /* ImmrHIDUtilAddOn.c */; };
@@ -30,6 +31,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7013F7581523A96A0082C1C5 /* hidmap_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hidmap_osx.h; sourceTree = "<group>"; };
+		7013F7591523A96A0082C1C5 /* hidmap_osx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hidmap_osx.c; sourceTree = "<group>"; };
 		70A74EF41517D10900B08F0B /* hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hid.c; path = ../hidapi/mac/hid.c; sourceTree = SOURCE_ROOT; };
 		70A74EF61517D10F00B08F0B /* hidapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hidapi.h; path = ../hidapi/hidapi/hidapi.h; sourceTree = SOURCE_ROOT; };
 		70A75022151A370C00B08F0B /* HID_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Utilities.c; sourceTree = "<group>"; };
@@ -64,6 +67,8 @@
 		08FB7794FE84155DC02AAC07 /* mididmap */ = {
 			isa = PBXGroup;
 			children = (
+				7013F7581523A96A0082C1C5 /* hidmap_osx.h */,
+				7013F7591523A96A0082C1C5 /* hidmap_osx.c */,
 				70EC64481513962D0037C5FC /* hidmap.c */,
 				70EC64491513962D0037C5FC /* hidmap.h */,
 				70A74EF61517D10F00B08F0B /* hidapi.h */,
@@ -172,6 +177,7 @@
 				70A7502C151A370C00B08F0B /* ImmrHIDUtilAddOn.c in Sources */,
 				70A7502D151A370C00B08F0B /* IOHIDDevice_.c in Sources */,
 				70A7502E151A370C00B08F0B /* IOHIDElement_.c in Sources */,
+				7013F75A1523A96A0082C1C5 /* hidmap_osx.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
