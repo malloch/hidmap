@@ -22,14 +22,23 @@ int done = 0;
 int port = 9000;
 unsigned char data[MAXLIST];
 
+typedef struct _hidmap_element {
+    mapper_signal           sig;
+    mapper_db_signal_t      props;
+    hid_element             *handle;
+    int                     previous_result;
+    struct _hidmap_element  *next;
+} *hidmap_element;
+
 typedef struct _hidmap_device {
-    mapper_device   dev;
-    hid_device      *handle;
-    unsigned short  vendor_id;
-    unsigned short  product_id;
-    char            *serial_number;
-    int             is_linked;
-    struct _hidmap_device *next;
+    mapper_device           dev;
+    hid_device              *handle;
+    unsigned short          vendor_id;
+    unsigned short          product_id;
+    char                    *serial_number;
+    hidmap_element          elements;
+    int                     is_linked;
+    struct _hidmap_device   *next;
 } *hidmap_device;
 
 struct _hidmap_device *devices = 0;
@@ -39,7 +48,6 @@ void cleanup_device(hidmap_device dev);
 // Declare output signals
 int add_mapper_signals(hidmap_device dev)
 {
-    printf("***************REPORT****************\n");
     char sig_name[256];
     int num_signals = 0;
     struct hid_element_info *elements, *cur_element;
@@ -50,6 +58,13 @@ int add_mapper_signals(hidmap_device dev)
             cur_element = cur_element->next;
             continue;   // skip collections
         }
+
+        // create a new hidmap_element
+        hidmap_element element = (hidmap_element) calloc(1, sizeof(struct _hidmap_element));
+        element->next = dev->elements;
+        dev->elements = element;
+
+        element->handle = hid_get_element(dev->handle, cur_element->path);
 
         sig_name[0] = 0;
         // Remove string "Generic Desktop" from path
@@ -64,12 +79,14 @@ int add_mapper_signals(hidmap_device dev)
             else
                 i++;
         }
-        mdev_add_output(dev->dev, sig_name, 1, 'i', 0, &cur_element->logical_range[0], &cur_element->logical_range[1]);
+        element->sig = mdev_add_output(dev->dev, sig_name, 1, 'i', 0,
+                                       &cur_element->logical_range[0],
+                                       &cur_element->logical_range[1]);
         num_signals++;
 
-        printf("%s -> size: %i, bitoffset: %i\n", sig_name, cur_element->size, cur_element->bit_offset);
         cur_element = cur_element->next;
     }
+    hid_free_element_enumeration(elements);
     return num_signals;
 }
 
@@ -80,7 +97,7 @@ void scan_hid_devices()
     char buffer[256], sig_name[256], serial_string[256];
 
     struct hid_device_info *devs, *cur_dev;
-    devs = hid_enumerate(0x0, 0x0);
+    devs = hid_enumerate_devices(0x0, 0x0);
     cur_dev = devs;
     while (cur_dev) {
         buffer[0] = 0;
@@ -134,7 +151,29 @@ void scan_hid_devices()
         
         cur_dev = cur_dev->next;
     }
-    hid_free_enumeration(devs);
+    hid_free_device_enumeration(devs);
+}
+
+void read_elements(hidmap_device device)
+{
+    int result;
+    if (!device->elements)
+        return;
+
+    hidmap_element cur_element = device->elements;
+    while (cur_element) {
+        result = hid_read_element(cur_element->handle);
+        if (result != *(int *)msig_value(cur_element->sig, 0))
+            msig_update_int(cur_element->sig, result);
+        cur_element = cur_element->next;
+    }
+}
+
+void cleanup_element(hidmap_element element)
+{
+    if (element->handle) {
+        free(element->handle);
+    }
 }
 
 void cleanup_device(hidmap_device dev)
@@ -147,6 +186,14 @@ void cleanup_device(hidmap_device dev)
     }
     if (dev->serial_number) {
         free(dev->serial_number);
+    }
+    if (dev->elements) {
+        hidmap_element element;
+        while (dev->elements) {
+            element = dev->elements;
+            dev->elements = dev->elements->next;
+            cleanup_element(element);
+        }
     }
 }
 
@@ -178,6 +225,7 @@ void loop()
                 i = hid_read(temp->handle, data, 256);
                 if (i) {
                     printf("read %i bytes from %s\n", i, mdev_name(temp->dev));
+                    read_elements(temp);
                 }
             }
             temp = temp->next;

@@ -8,6 +8,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include "HID_Utilities_External.h"
 #include "hidapi.h"
 #include "mapper/mapper.h"
 
