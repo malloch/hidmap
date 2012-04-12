@@ -24,9 +24,10 @@ unsigned char data[MAXLIST];
 
 typedef struct _hidmap_element {
     mapper_signal           sig;
-    mapper_db_signal_t      props;
+    mapper_db_signal        props;
     hid_element             *handle;
     int                     previous_result;
+    int                     is_relative;
     struct _hidmap_element  *next;
 } *hidmap_element;
 
@@ -51,6 +52,8 @@ int add_mapper_signals(hidmap_device dev)
     char sig_name[256];
     int num_signals = 0;
     struct hid_element_info *elements, *cur_element;
+
+    dev->elements = 0;
     elements = hid_enumerate_elements(dev->handle);
     cur_element = elements;
     while (cur_element) {
@@ -61,8 +64,6 @@ int add_mapper_signals(hidmap_device dev)
 
         // create a new hidmap_element
         hidmap_element element = (hidmap_element) calloc(1, sizeof(struct _hidmap_element));
-        element->next = dev->elements;
-        dev->elements = element;
 
         element->handle = hid_get_element(dev->handle, cur_element->path);
 
@@ -72,6 +73,14 @@ int add_mapper_signals(hidmap_device dev)
         for (i=0; i<len;) {
             if (strncmp(&cur_element->path[i], "Generic Desktop ", 16) == 0)
                 i += 16;
+            else if (strncmp(&cur_element->path[i], " or Keypad ", 11) == 0) {
+                sig_name[j++] = '/';
+                i += 11;
+            }
+            else if (strncmp(&cur_element->path[i], " #0x", 3) == 0) {
+                sig_name[j++] = '/';
+                i += 2;
+            }
             else if (isalnum(cur_element->path[i]) || cur_element->path[i] == '/') {
                 sig_name[j++] = cur_element->path[i++];
                 sig_name[j] = 0;
@@ -79,11 +88,23 @@ int add_mapper_signals(hidmap_device dev)
             else
                 i++;
         }
+        printf("adding %s\n", sig_name);
         element->sig = mdev_add_output(dev->dev, sig_name, 1, 'i', 0,
                                        &cur_element->logical_range[0],
                                        &cur_element->logical_range[1]);
-        num_signals++;
+        if (!element->sig) {
+            printf("Duplicate signal!!!\n");
+            free(element);
+            cur_element = cur_element->next;
+            continue;
+        }
 
+        element->props = msig_properties(element->sig);
+
+        element->next = dev->elements;
+        dev->elements = element;
+
+        num_signals++;
         cur_element = cur_element->next;
     }
     hid_free_element_enumeration(elements);
@@ -156,15 +177,18 @@ void scan_hid_devices()
 
 void read_elements(hidmap_device device)
 {
-    int result;
+    int result, *previous_result;
     if (!device->elements)
         return;
 
     hidmap_element cur_element = device->elements;
     while (cur_element) {
         result = hid_read_element(cur_element->handle);
-        if (result != *(int *)msig_value(cur_element->sig, 0))
+        previous_result = msig_value(cur_element->sig, 0);
+        if (!previous_result || (result != *previous_result)) {
+            printf("--> updating value of %s to %i\n", cur_element->props->name, result);
             msig_update_int(cur_element->sig, result);
+        }
         cur_element = cur_element->next;
     }
 }
@@ -221,7 +245,7 @@ void loop()
         while (temp) {
             if (temp->dev)
                 mdev_poll(temp->dev, 0);
-            if (temp->handle) {
+            if (mdev_ready(temp->dev) && temp->handle) {
                 i = hid_read(temp->handle, data, 256);
                 if (i) {
                     printf("read %i bytes from %s\n", i, mdev_name(temp->dev));

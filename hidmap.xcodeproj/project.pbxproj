@@ -28,14 +28,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 70AAE65715333D2E0084F650 /* HID Utilities.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D07F2C80486CC7A007CD1D0 /* HID Utilities.framework */;
+			remoteGlobalIDString = 8D07F2C80486CC7A007CD1D0;
 			remoteInfo = Framework;
 		};
 		70AAE67C15333D2E0084F650 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 70AAE65715333D2E0084F650 /* HID Utilities.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 97F808C710347C9A00D58924 /* libHID_Utilities.dylib */;
+			remoteGlobalIDString = 97F808C710347C9A00D58924;
 			remoteInfo = "dynamic library";
 		};
 /* End PBXContainerItemProxy section */
